@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definición | Grafos & Neo4J</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="logo">Grafos & Neo4J</a>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav-links">
+                <a href="definicion.html">Definición</a>
+                <a href="motores.html">Motores</a>
+                <a href="casos-uso.html">Casos de Uso</a>
+                <a href="equivalencias.html">Equivalencias</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <header class="page-header fade-up">
+            <a href="../index.html" class="back-link">← Volver al inicio</a>
+            <h1>Definición de Grafos</h1>
+        </header>
+
+        <section class="content-section fade-up">
+            <h2 class="section-title">¿Qué es una base de datos orientada a grafos?</h2>
+            <p>Una base de datos orientada a grafos es un sistema de gestión diseñado específicamente para almacenar, mapear y consultar relaciones entre datos de manera nativa, priorizando las conexiones entre entidades tanto como las entidades mismas, lo que permite descubrir patrones complejos y navegar arquitecturas de información interconectadas con una eficiencia y flexibilidad que los modelos relacionales tradicionales no pueden alcanzar.</p>
+        </section>
+
+        <section class="content-section fade-up">
+            <h2 class="section-title">Características Principales</h2>
+            <div class="interactive-cards">
+                <div class="detail-card flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Nodos</h3>
+                            <p>Las entidades principales del dominio.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p>Representan objetos, personas, lugares o conceptos. Son el equivalente más cercano a un registro o fila en una base de datos relacional, pero con la capacidad de contener estructuras de datos arbitrariamente complejas.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-card flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Relaciones</h3>
+                            <p>Las conexiones semánticas y dirigidas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p>Vinculan dos nodos estableciendo un contexto claro. Cada relación tiene una dirección, un tipo y puede contener sus propios datos, convirtiendo la conexión en un elemento de primera clase dentro del modelo.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-card flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Propiedades</h3>
+                            <p>Atributos clave-valor almacenados.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p>Tanto los nodos como las relaciones pueden contener propiedades. Esta característica permite enriquecer el grafo con metadatos descriptivos sin necesidad de alterar la estructura global de la base de datos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-card flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Esquema flexible</h3>
+                            <p>Evolución sin migraciones costosas.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p>Los modelos de grafos permiten añadir nuevos tipos de nodos, relaciones y propiedades de forma continua a medida que cambian los requisitos del negocio, eliminando los cuellos de botella de los rediseños de esquema estructurales.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-card flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Traversal eficiente</h3>
+                            <p>Navegación veloz entre puntos conectados.</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <p>A diferencia de las costosas operaciones JOIN en SQL, los motores de grafos utilizan punteros directos en memoria para saltar de nodo en nodo, manteniendo tiempos de respuesta constantes independientemente del volumen total de datos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section fade-up">
+            <h2 class="section-title">Visualización de Relación</h2>
+            <p>En el modelo de grafos, las entidades se conectan explícitamente mediante relaciones con dirección y tipo definido.</p>
+            <div style="background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 3rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                <svg viewBox="0 0 400 150" style="width: 100%; height: auto; max-width: 500px; display: block; margin: 0 auto;">
+                    <line x1="100" y1="75" x2="300" y2="75" stroke="var(--border-color)" stroke-width="3" />
+                    <polygon points="210,70 220,75 210,80" fill="var(--border-color)" />
+                    
+                    <rect x="50" y="50" width="100" height="50" rx="8" fill="var(--primary)" />
+                    <text x="100" y="80" fill="#fff" font-family="Inter" font-size="16" font-weight="600" text-anchor="middle">Persona</text>
+                    
+                    <rect x="250" y="50" width="100" height="50" rx="8" fill="var(--secondary)" />
+                    <text x="300" y="80" fill="#fff" font-family="Inter" font-size="16" font-weight="600" text-anchor="middle">Persona</text>
+                    
+                    <rect x="150" y="60" width="100" height="30" rx="15" fill="var(--surface)" stroke="var(--border-color)" stroke-width="1"/>
+                    <text x="200" y="80" fill="var(--text-color)" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">CONOCE</text>
+                </svg>
+            </div>
+        </section>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-gradient-line"></div>
+        <div class="footer-image-wrap">
+            <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="">
+            <div class="footer-image-fade-left"></div>
+            <div class="footer-image-fade-right"></div>
+        </div>
+        <div class="container footer-container">
+            <div class="footer-left">
+                <div class="footer-col footer-col-credits">
+                    <span class="footer-label">CRÉDITOS</span>
+                    <span class="footer-name">Martín Gaona</span>
+                    <span class="footer-name">Erick Quinchiguango</span>
+                    <span class="footer-name">Nicole Yépez</span>
+                </div>
+                <div class="footer-col footer-col-nav">
+                    <span class="footer-label">NAVEGACIÓN</span>
+                    <a href="definicion.html" class="page-link">Definición</a>
+                    <a href="motores.html" class="page-link">Motores</a>
+                    <a href="casos-uso.html" class="page-link">Casos de Uso</a>
+                    <a href="equivalencias.html" class="page-link">Equivalencias</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2026 BASES DE DATOS NOSQL — Base de Datos II
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/animations.js"></script>
+</body>
+</html>

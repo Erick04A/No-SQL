@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafos & Neo4J | Bases de Datos NoSQL</title>
+    <meta name="description" content="Explora, aprende y conecta con las bases de datos orientadas a grafos.">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">Grafos & Neo4J</a>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav-links">
+                <a href="pages/definicion.html">Definición</a>
+                <a href="pages/motores.html">Motores</a>
+                <a href="pages/casos-uso.html">Casos de Uso</a>
+                <a href="pages/equivalencias.html">Equivalencias</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="container hero-content" style="pointer-events: none; width: 100%;">
+            <div class="title-wrapper animate-title" style="text-align: center;">
+                <h1 class="hero-main-title">SQL <span class="accent-x">×</span> Neo4J</h1>
+                <div class="title-gradient-line" style="margin: 0 auto;"></div>
+            </div>
+            <p class="hero-subtitle animate-subtitle">Descubre cómo las bases de datos relacionales y los grafos pueden coexistir y ver el mundo de otra manera.</p>
+            <div class="scroll-cta animate-subtitle" style="animation-delay: 800ms;">
+                <a href="#first-section" class="scroll-link">Explora hacia abajo</a>
+                <div class="scroll-arrow"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="first-section" class="scroll-section" style="background: radial-gradient(circle at center, rgba(99,102,241,0.04) 0%, transparent 70%);">
+        <div class="two-col">
+            <div class="slide-left">
+                <h2 style="border-left: 3px solid var(--primary); padding-left: 16px; margin-bottom: 1.5rem; font-size: 2.5rem; font-weight: 600; color: var(--text-color);">¿Qué es un grafo?</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8;">Es una estructura de datos nativa diseñada para modelar relaciones. Olvídate de tablas rígidas: aquí los datos se conectan directamente formando redes que revelan patrones ocultos al instante.</p>
+                <p style="font-style: italic; font-size: 15px; color: var(--primary); margin-top: 1rem;">"En un grafo, cada conexión tiene tanto valor como el dato mismo."</p>
+            </div>
+            <div class="slide-right">
+                <div style="border-bottom: 1px solid #E4E4E7; padding-bottom: 2rem;">
+                    <svg viewBox="0 0 300 200" style="width: 100%; height: auto; max-width: 400px; display: block; margin: 0 auto;">
+                        <line x1="60" y1="60" x2="240" y2="60" stroke="var(--border-color)" stroke-width="2" />
+                        <line x1="240" y1="60" x2="150" y2="150" stroke="var(--border-color)" stroke-width="2" />
+                        
+                        <circle cx="60" cy="60" r="35" fill="var(--primary)" />
+                        <circle cx="240" cy="60" r="35" fill="var(--secondary)" />
+                        <circle cx="150" cy="150" r="35" fill="var(--primary)" />
+                        
+                        <text x="60" y="65" fill="#fff" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">Denisse</text>
+                        <text x="240" y="65" fill="#fff" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">María</text>
+                        <text x="150" y="155" fill="#fff" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">Carlos</text>
+                        
+                        <text x="150" y="50" fill="var(--text-color)" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle">CONOCE</text>
+                        <text x="210" y="105" fill="var(--text-color)" font-family="Inter" font-size="11" font-weight="600" text-anchor="start">TRABAJA CON</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 3rem;">Los componentes</h2>
+        <div class="interactive-cards">
+            <div class="component-card nodo-card fade-up" style="transition-delay: 0ms;" onclick="this.classList.toggle('expanded')">
+                <h3>Nodo</h3>
+                <p>La entidad</p>
+                <div class="component-detail">Representa una entidad: una persona, lugar, producto o concepto.</div>
+            </div>
+            
+            <div class="component-card rel-card fade-up" style="transition-delay: 150ms;" onclick="this.classList.toggle('expanded')">
+                <h3>Relación</h3>
+                <p>La conexión</p>
+                <div class="component-detail">Conecta dos nodos con dirección y nombre. Ej: CONOCE, COMPRÓ, TRABAJA_EN.</div>
+            </div>
+            
+            <div class="component-card prop-card fade-up" style="transition-delay: 300ms;" onclick="this.classList.toggle('expanded')">
+                <h3>Propiedad</h3>
+                <p>El detalle</p>
+                <div class="component-detail">Atributo clave-valor dentro de un nodo o relación. Ej: nombre: 'Ana', edad: 29.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dark-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 4rem;">¿Por qué grafos?</h2>
+            <div class="stat-grid">
+                <div>
+                    <div class="stat-number" data-target="10">0<span>x</span></div>
+                    <div class="stat-label">más rápido en traversal de datos profundos vs bases relacionales</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-target="1000">0<span>x</span></div>
+                    <div class="stat-label">menos JOINs complejos gracias a los punteros indexados en memoria</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-target="70">0<span>%</span></div>
+                    <div class="stat-label">de las empresas Fortune 500 ya implementan tecnología de grafos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <h2 class="section-title" style="margin-bottom: 3rem; text-align: center;">Explora el tema</h2>
+        <div class="tilt-cards-grid">
+            <a href="pages/definicion.html" class="tilt-card tilt-def fade-up" style="transition-delay: 0ms;">
+                <div class="tilt-image-area">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="Definición">
+                    <div class="tilt-gradient-overlay"></div>
+                </div>
+                <div class="tilt-shine"></div>
+                <div class="tilt-content">
+                    <h3>Definición</h3>
+                    <p>Descubre qué son los grafos y cómo estructuran la información a un nivel fundamental.</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="pages/motores.html" class="tilt-card tilt-mot fade-up" style="transition-delay: 100ms;">
+                <div class="tilt-image-area">
+                    <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&q=80" alt="Motores">
+                    <div class="tilt-gradient-overlay"></div>
+                </div>
+                <div class="tilt-shine"></div>
+                <div class="tilt-content">
+                    <h3>Motores</h3>
+                    <p>Compara Neo4J con alternativas como ArangoDB y Amazon Neptune.</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="pages/casos-uso.html" class="tilt-card tilt-use fade-up" style="transition-delay: 200ms;">
+                <div class="tilt-image-area">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Casos de Uso">
+                    <div class="tilt-gradient-overlay"></div>
+                </div>
+                <div class="tilt-shine"></div>
+                <div class="tilt-content">
+                    <h3>Casos de Uso</h3>
+                    <p>Motores de recomendación, fraude y algoritmos en redes sociales.</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+            <a href="pages/equivalencias.html" class="tilt-card tilt-eq fade-up" style="transition-delay: 300ms;">
+                <div class="tilt-image-area">
+                    <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&q=80" alt="Equivalencias">
+                    <div class="tilt-gradient-overlay"></div>
+                </div>
+                <div class="tilt-shine"></div>
+                <div class="tilt-content">
+                    <h3>Equivalencias</h3>
+                    <p>Mapea conceptos de SQL al nuevo paradigma de grafos.</p>
+                </div>
+                <span class="arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="scroll-section" style="text-align: center; max-width: 800px;">
+        <h2 class="section-title" style="display: inline-block;">Neo4J en una línea</h2>
+        <p style="margin: 2rem 0;">Cypher es el lenguaje de consulta declarativo de Neo4J. Se lee de izquierda a derecha dibujando visualmente el patrón que deseas encontrar:</p>
+        
+        <div class="code-block slide-up">
+            <span class="code-kw">MATCH</span> (<span class="code-node">p</span>:Person)-[<span class="code-rel">:KNOWS</span>]->(<span class="code-node">q</span>:Person) <span class="code-kw">RETURN</span> p, q
+        </div>
+        
+        <p style="opacity: 0.8; font-size: 0.95rem;">Esta consulta encuentra todos los nodos "Person" que están conectados por una relación "KNOWS" hacia otro nodo "Person", y devuelve ambos.</p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-gradient-line"></div>
+        <div class="footer-image-wrap">
+            <img src="https://images.unsplash.com/photo-1545987796-200677ee1011?w=800&q=80" alt="">
+            <div class="footer-image-fade-left"></div>
+            <div class="footer-image-fade-right"></div>
+        </div>
+        <div class="container footer-container">
+            <div class="footer-left">
+                <div class="footer-col footer-col-credits">
+                    <span class="footer-label">CRÉDITOS</span>
+                    <span class="footer-name">Martín Gaona</span>
+                    <span class="footer-name">Erick Quinchiguango</span>
+                    <span class="footer-name">Nicole Yépez</span>
+                </div>
+                <div class="footer-col footer-col-nav">
+                    <span class="footer-label">NAVEGACIÓN</span>
+                    <a href="pages/definicion.html" class="page-link">Definición</a>
+                    <a href="pages/motores.html" class="page-link">Motores</a>
+                    <a href="pages/casos-uso.html" class="page-link">Casos de Uso</a>
+                    <a href="pages/equivalencias.html" class="page-link">Equivalencias</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2026 BASES DE DATOS NOSQL — Base de Datos II
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/gl-matrix-min.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/graph.js"></script>
+</body>
+</html>
