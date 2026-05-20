@@ -5,114 +5,364 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equivalencias SQL a Grafos | Grafos & Neo4J</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        body {
+            background-color: #F5F3E8 !important;
+            color: #1C2B1A !important;
+        }
+        .site-header {
+            background: #FEFCF0 !important;
+            border-bottom: 1px solid #D4C97A !important;
+            box-shadow: 0 2px 10px rgba(74, 124, 63, 0.04) !important;
+        }
+        .logo-text, .nav-links a {
+            color: #1C2B1A !important;
+        }
+        .logo-accent {
+            color: #C9A84C !important;
+        }
+        .nav-links a:hover {
+            color: #4A7C3F !important;
+        }
+        
+        .back-home-btn {
+            background: #0F172A !important;
+            border: none !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 16px rgba(15,23,42,0.25) !important;
+            transition: all 0.2s ease !important;
+        }
+        .back-home-btn:hover {
+            background: #1E293B !important;
+            border: 1px solid #C9A84C !important;
+            box-shadow: 0 6px 24px rgba(15,23,42,0.35) !important;
+            transform: translateY(-2px) !important;
+        }
+        .back-home-btn svg {
+            stroke: #06B6D4 !important;
+        }
+        .back-home-btn span {
+            color: #F8FAFC !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem) !important;
+            font-weight: 700 !important;
+            color: #1C2B1A !important;
+            margin-bottom: 0 !important;
+            text-align: center;
+        }
+        .title-underline-wrapper {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+        .title-underline {
+            height: 3px;
+            background: linear-gradient(90deg, #4A7C3F, #C9A84C);
+            width: 0;
+            margin: 12px auto 0;
+            border-radius: 2px;
+            animation: expandUnderline 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes expandUnderline {
+            to { width: 50%; }
+        }
+
+        .section-label-loki {
+            color: #4A7C3F !important;
+            border-left: 3px solid #C9A84C !important;
+            padding-left: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+        .table-container-loki {
+            background: #FEFCF0 !important;
+            border-radius: 16px !important;
+            border: 1px solid #D4C97A !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 20px rgba(74, 124, 63, 0.08) !important;
+            margin-bottom: 3rem;
+        }
+        .comparison-table-loki {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .comparison-table-loki thead tr {
+            background: linear-gradient(135deg, #4A7C3F, #3D6B34) !important;
+        }
+        .comparison-table-loki th {
+            color: #FEFCF0 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.08em !important;
+            padding: 14px 24px !important;
+            border: none !important;
+        }
+        .comparison-table-loki tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(212, 201, 122, 0.3) !important;
+        }
+        .comparison-table-loki tbody tr:nth-child(odd) {
+            background: #FEFCF0 !important;
+        }
+        .comparison-table-loki tbody tr:nth-child(even) {
+            background: #F0F5E8 !important;
+        }
+        .comparison-table-loki tbody tr:hover {
+            background: #E8F5E3 !important;
+            border-left: 3px solid #C9A84C !important;
+        }
+        .comparison-table-loki td {
+            padding: 20px 24px !important;
+            vertical-align: middle;
+        }
+        .sql-concept-col {
+            color: #1C2B1A !important;
+            font-weight: 500 !important;
+            font-size: 16px !important;
+        }
+        .graph-concept-col {
+            color: #4A7C3F !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+        }
+        .description-col {
+            color: #6B7355 !important;
+            font-size: 15px !important;
+            font-weight: 500;
+        }
+        .example-text-loki {
+            color: #C9A84C !important;
+            font-size: 13px !important;
+            font-style: italic !important;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .structural-container-loki {
+            background: #FEFCF0 !important;
+            border: 1px solid #D4C97A !important;
+            border-radius: 16px !important;
+            padding: 40px !important;
+            box-shadow: 0 4px 20px rgba(74, 124, 63, 0.05) !important;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            height: auto !important;
+            min-height: 240px !important;
+            overflow: hidden !important;
+        }
+        .structural-title {
+            color: #1C2B1A !important;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+        .structural-subtitle {
+            color: #C9A84C !important;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 2rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .sql-table-box-loki {
+            background: #F0F5E8 !important;
+            border: 1px solid #4A7C3F !important;
+            border-radius: 8px !important;
+            color: #1C2B1A !important;
+            font-family: monospace !important;
+            font-size: 13px !important;
+            overflow: hidden;
+            width: 280px !important;
+            flex-shrink: 0 !important;
+            box-shadow: 0 2px 8px rgba(74, 124, 63, 0.06);
+        }
+        .sql-table-header-loki {
+            background: #4A7C3F !important;
+            color: #ffffff !important;
+            padding: 10px 16px !important;
+            font-weight: 600;
+            text-align: center;
+        }
+        .sql-table-row-loki {
+            padding: 8px 16px !important;
+            border-bottom: 1px solid rgba(74, 124, 63, 0.15);
+        }
+        .sql-table-row-loki:last-child {
+            border-bottom: none;
+        }
+
+        .anim-arrow-loki {
+            color: #C9A84C !important;
+            font-size: 28px !important;
+            font-weight: bold;
+            animation: pulseArrow 2s infinite ease-in-out;
+            user-select: none;
+            flex-shrink: 0 !important;
+            padding: 0 16px !important;
+            align-self: center !important;
+        }
+        @keyframes pulseArrow {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+
+        .transformation-flex-loki {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 40px !important;
+            padding: 32px !important;
+            flex-wrap: nowrap !important;
+            box-sizing: border-box !important;
+        }
+
+
+    </style>
 </head>
 <body>
     <header class="site-header">
         <div class="container header-container">
-            <a href="../index.html" class="logo">Grafos & Neo4J</a>
+            <a href="../index.html" class="logo">
+                <div class="logo-icon-wrapper">
+                    <img src="../logo.png" alt="Logo" class="logo-img">
+                </div>
+                <span class="logo-text">SQL <span class="logo-accent">×</span> Neo4J</span>
+            </a>
             <button class="menu-toggle">☰</button>
             <nav class="nav-links">
                 <a href="definicion.html">Definición</a>
                 <a href="motores.html">Motores</a>
                 <a href="casos-uso.html">Casos de Uso</a>
                 <a href="equivalencias.html">Equivalencias</a>
+                <a href="laboratorio.html">Laboratorio</a>
             </nav>
         </div>
     </header>
 
+    <a href="../index.html" class="back-home-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Inicio</span>
+    </a>
+
     <div class="container">
-        <header class="page-header fade-up">
-            <a href="../index.html" class="back-link">← Volver al inicio</a>
-            <h1>De Relacional a Grafos</h1>
+        <header class="page-header fade-up" style="margin-top: 3rem; margin-bottom: 3rem;">
+            <div class="title-underline-wrapper">
+                <h1>De Relacional a Grafos</h1>
+                <div class="title-underline"></div>
+            </div>
         </header>
 
         <section class="content-section fade-up">
-            <h2 class="section-title" style="margin-bottom: 2rem;">Tabla de Equivalencias</h2>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Concepto SQL (Relacional)</th>
-                        <th>Concepto Grafo (NoSQL)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            Tabla
-                            <span class="example-tooltip">Ej. Tabla 'Usuarios'</span>
-                        </td>
-                        <td>
-                            Etiqueta de Nodo (Label)
-                            <span class="example-tooltip">Ej. Nodo con etiqueta :Usuario</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Fila
-                            <span class="example-tooltip">Ej. Registro de Juan Pérez</span>
-                        </td>
-                        <td>
-                            Nodo individual
-                            <span class="example-tooltip">Ej. Nodo específico (Juan Pérez)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Columna
-                            <span class="example-tooltip">Ej. Columna 'Edad' INT</span>
-                        </td>
-                        <td>
-                            Propiedad
-                            <span class="example-tooltip">Ej. Propiedad { edad: 30 }</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            JOIN
-                            <span class="example-tooltip">Ej. Clave foránea usuario_id</span>
-                        </td>
-                        <td>
-                            Relación (Edge)
-                            <span class="example-tooltip">Ej. (Usuario)-[:COMPRÓ]->(Producto)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Primary Key
-                            <span class="example-tooltip">Ej. id INT PRIMARY KEY</span>
-                        </td>
-                        <td>
-                            ID de Nodo (o Propiedad Única)
-                            <span class="example-tooltip">Ej. ID interno o propiedad con restricción UNIQUE</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <h2 class="section-label-loki">Tabla de Equivalencias</h2>
+            
+            <div class="table-container-loki">
+                <table class="comparison-table-loki">
+                    <thead>
+                        <tr>
+                            <th>Concepto SQL (Relacional)</th>
+                            <th>Concepto Grafo (NoSQL)</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="sql-concept-col">Tabla</div>
+                                <span class="example-text-loki">Ej. Tabla 'Usuarios'</span>
+                            </td>
+                            <td>
+                                <div class="graph-concept-col">Etiqueta de Nodo (Label)</div>
+                                <span class="example-text-loki">Ej. Nodo con etiqueta :Usuario</span>
+                            </td>
+                            <td>
+                                <div class="description-col">Cada tabla se convierte en un tipo de nodo etiquetado</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="sql-concept-col">Fila</div>
+                                <span class="example-text-loki">Ej. Registro de Juan Pérez</span>
+                            </td>
+                            <td>
+                                <div class="graph-concept-col">Nodo individual</div>
+                                <span class="example-text-loki">Ej. Nodo específico (Juan Pérez)</span>
+                            </td>
+                            <td>
+                                <div class="description-col">Cada registro es ahora un nodo con propiedades</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="sql-concept-col">Columna</div>
+                                <span class="example-text-loki">Ej. Columna 'Edad' INT</span>
+                            </td>
+                            <td>
+                                <div class="graph-concept-col">Propiedad</div>
+                                <span class="example-text-loki">Ej. Propiedad { edad: 30 }</span>
+                            </td>
+                            <td>
+                                <div class="description-col">Los campos pasan a ser atributos del nodo</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="sql-concept-col">JOIN</div>
+                                <span class="example-text-loki">Ej. Clave foránea usuario_id</span>
+                            </td>
+                            <td>
+                                <div class="graph-concept-col">Relación (Edge)</div>
+                                <span class="example-text-loki">Ej. (Usuario)-[:COMPRÓ]->(Producto)</span>
+                            </td>
+                            <td>
+                                <div class="description-col">Las claves foráneas se convierten en aristas explícitas</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="sql-concept-col">Primary Key</div>
+                                <span class="example-text-loki">Ej. id INT PRIMARY KEY</span>
+                            </td>
+                            <td>
+                                <div class="graph-concept-col">ID de Nodo (o Propiedad Única)</div>
+                                <span class="example-text-loki">Ej. ID interno o propiedad con restricción UNIQUE</span>
+                            </td>
+                            <td>
+                                <div class="description-col">El identificador único persiste como propiedad del nodo</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <div class="diagram-container fade-up">
-                <h3 class="section-title">Transformación Estructural</h3>
-                <p style="color: var(--secondary); margin-bottom: 2rem; margin-top: 1rem;">Cómo se visualiza el cambio de paradigma</p>
+            <div class="structural-container-loki fade-up">
+                <h3 class="structural-title">Transformación Estructural</h3>
+                <p class="structural-subtitle">Cómo se visualiza el cambio de paradigma</p>
                 
-                <div class="sql-to-graph-anim">
-                    <div class="anim-step sql-step-1" style="display: flex; flex-direction: column; gap: 0.5rem; background: var(--bg-color);">
-                        <div style="padding: 0.5rem 1rem; border: 1px solid var(--border-color); background: var(--surface);">ID | Nombre | DeptID</div>
-                        <div style="padding: 0.5rem 1rem; border: 1px solid var(--border-color); background: var(--surface);">1 | Ana | 10</div>
-                        <div style="padding: 0.5rem 1rem; border: 1px solid var(--border-color); background: var(--surface);">2 | Luis | 10</div>
+                <div class="transformation-flex-loki">
+                    <div class="sql-table-box-loki">
+                        <div class="sql-table-header-loki">Tabla: Empleados</div>
+                        <div class="sql-table-row-loki" style="background: rgba(74, 124, 63, 0.08); font-weight: bold; border-bottom: 2px solid #4A7C3F;">ID | Nombre | DeptID</div>
+                        <div class="sql-table-row-loki">1 | Ana | 10</div>
+                        <div class="sql-table-row-loki">2 | Luis | 10</div>
                     </div>
                     
-                    <div class="anim-arrow sql-step-2">→</div>
+                    <div class="anim-arrow-loki">→</div>
                     
-                    <div class="anim-step graph-step sql-step-3" style="position: relative; width: 250px; height: 150px; border: none; background: transparent;">
-                        <div style="position: absolute; top: 10px; left: 10px; background: var(--primary); color: white; padding: 0.5rem; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">Ana</div>
-                        <div style="position: absolute; bottom: 10px; left: 10px; background: var(--primary); color: white; padding: 0.5rem; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">Luis</div>
-                        
-                        <div style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: var(--secondary); color: white; padding: 0.5rem; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">Dept 10</div>
-                        
-                        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;">
-                            <line x1="50" y1="35" x2="180" y2="75" stroke="var(--primary)" stroke-width="2" />
-                            <line x1="50" y1="125" x2="180" y2="75" stroke="var(--primary)" stroke-width="2" />
-                        </svg>
-                    </div>
+                    <div id="vis-graph-equivalencias" style="flex: 1; height: 200px; min-width: 300px; background: transparent;"></div>
                 </div>
             </div>
         </section>
@@ -121,7 +371,7 @@
     <footer class="site-footer">
         <div class="footer-gradient-line"></div>
         <div class="footer-image-wrap">
-            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="">
             <div class="footer-image-fade-left"></div>
             <div class="footer-image-fade-right"></div>
         </div>
@@ -139,6 +389,7 @@
                     <a href="motores.html" class="page-link">Motores</a>
                     <a href="casos-uso.html" class="page-link">Casos de Uso</a>
                     <a href="equivalencias.html" class="page-link">Equivalencias</a>
+                    <a href="laboratorio.html" class="page-link">Laboratorio</a>
                 </div>
             </div>
             <div class="footer-copyright">
@@ -148,5 +399,34 @@
     </footer>
 
     <script src="../js/animations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var container = document.getElementById('vis-graph-equivalencias');
+            var nodes = new vis.DataSet([
+                { id: 1, label: 'Ana', color: { background: '#4A7C3F', border: '#4A7C3F', highlight: { background: '#4A7C3F', border: '#4A7C3F' } }, font: { color: '#ffffff', size: 14, face: 'monospace', bold: true }, shape: 'circle', margin: 10 },
+                { id: 2, label: 'Luis', color: { background: '#4A7C3F', border: '#4A7C3F', highlight: { background: '#4A7C3F', border: '#4A7C3F' } }, font: { color: '#ffffff', size: 14, face: 'monospace', bold: true }, shape: 'circle', margin: 10 },
+                { id: 3, label: 'Dept 10', color: { background: '#C9A84C', border: '#C9A84C', highlight: { background: '#C9A84C', border: '#C9A84C' } }, font: { color: '#ffffff', size: 14, face: 'monospace', bold: true }, shape: 'circle', margin: 10 }
+            ]);
+            var edges = new vis.DataSet([
+                { from: 1, to: 3, label: 'TRABAJA_EN', arrows: 'to', color: { color: '#C9A84C', highlight: '#C9A84C' }, font: { color: '#C9A84C', size: 11, align: 'top', face: 'monospace', strokeWidth: 0 } },
+                { from: 2, to: 3, label: 'TRABAJA_EN', arrows: 'to', color: { color: '#C9A84C', highlight: '#C9A84C' }, font: { color: '#C9A84C', size: 11, align: 'top', face: 'monospace', strokeWidth: 0 } }
+            ]);
+            var data = { nodes: nodes, edges: edges };
+            var options = {
+                nodes: { borderWidth: 2, shadow: true },
+                edges: { width: 2, shadow: false },
+                physics: {
+                    enabled: true,
+                    stabilization: { enabled: true, iterations: 1000 }
+                },
+                interaction: { dragNodes: true, dragView: true, zoomView: true }
+            };
+            var network = new vis.Network(container, data, options);
+            network.once('stabilized', function() {
+                network.fit();
+                network.setOptions({ physics: { enabled: false } });
+            });
+        });
+    </script>
 </body>
 </html>

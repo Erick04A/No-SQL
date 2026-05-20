@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Cypher | SQL × Neo4J</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon-wrapper">
+                    <img src="../logo.png" alt="Logo" class="logo-img">
+                </div>
+                <span class="logo-text">SQL <span class="logo-accent">×</span> Neo4J</span>
+            </a>
+            <button class="menu-toggle">☰</button>
+            <nav class="nav-links">
+                <a href="definicion.html">Definición</a>
+                <a href="motores.html">Motores</a>
+                <a href="casos-uso.html">Casos de Uso</a>
+                <a href="equivalencias.html">Equivalencias</a>
+                <a href="laboratorio.html">Laboratorio</a>
+            </nav>
+        </div>
+    </header>
+
+    <a href="../index.html" class="back-home-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Inicio</span>
+    </a>
+
+    <div class="container lab-page-container">
+        <header class="page-header fade-up" style="position: relative;">
+            <h1 style="font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-top: 1rem;">Laboratorio Cypher</h1>
+            <p style="color: var(--text-color); opacity: 0.6; font-size: 18px; max-width: 500px; margin: 0.5rem auto 0;">Ejecuta consultas Cypher y visualiza el grafo resultante en tiempo real.</p>
+            
+            <div class="mode-toggle">
+                <div id="btn-sql" class="mode-card">
+                    <div class="sql-icon-bars">
+                        <div class="sql-bar" style="width: 28px;"></div>
+                        <div class="sql-bar" style="width: 20px;"></div>
+                        <div class="sql-bar" style="width: 24px;"></div>
+                    </div>
+                    <div class="card-labels">
+                        <span class="card-label-main">SQL</span>
+                        <span class="card-label-sub">Relacional</span>
+                    </div>
+                </div>
+                <div id="btn-nodos" class="mode-card active-nodes">
+                    <div class="nodos-icon-svg">
+                        <svg class="node-svg" width="40" height="30" viewBox="0 0 40 30">
+                            <circle cx="8" cy="8" r="4" fill="#6366F1"/>
+                            <circle cx="32" cy="8" r="4" fill="#6366F1"/>
+                            <circle cx="20" cy="22" r="4" fill="#6366F1"/>
+                            <line x1="12" y1="8" x2="28" y2="8" stroke="#6366F1" stroke-width="1"/>
+                            <line x1="10" y1="11" x2="18" y2="19" stroke="#6366F1" stroke-width="1"/>
+                            <line x1="30" y1="11" x2="22" y2="19" stroke="#6366F1" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div class="card-labels">
+                        <span class="card-label-main">Nodos</span>
+                        <span class="card-label-sub">Grafo</span>
+                    </div>
+                </div>
+                <div id="btn-comparar" class="mode-card">
+                    <div class="comp-icon-svg" style="position: relative; width: 40px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                        <div class="comp-icon-rect" style="position: absolute; width: 14px; height: 14px; border: 1.5px solid #C7D2FE; border-radius: 3px; top: 5px; left: 8px; transition: border-color 0.25s, background 0.25s;"></div>
+                        <div class="comp-icon-rect" style="position: absolute; width: 14px; height: 14px; border: 1.5px solid #C7D2FE; border-radius: 3px; bottom: 5px; right: 8px; transition: border-color 0.25s, background 0.25s;"></div>
+                    </div>
+                    <div class="card-labels">
+                        <span class="card-label-main">Comparar</span>
+                        <span class="card-label-sub">SQL vs Grafo</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="lab-nodos-container" class="lab-card-new fade-up" style="display: flex; flex-direction: column; background: #1E1E2E; border-radius: 16px; height: 560px; overflow: hidden;">
+            <div class="ide-top-v2">
+                <div class="ide-dots-v2">
+                    <div class="dot-v2 dot-red"></div>
+                    <div class="dot-v2 dot-yellow"></div>
+                    <div class="dot-v2 dot-green"></div>
+                </div>
+                <div class="ide-tab-v2">query.cypher</div>
+                <button id="cypher-run-btn" class="sql-run-btn">
+                    <span class="run-icon">▶</span><span class="run-text">Run</span>
+                </button>
+                <div class="ide-pills-v2">
+                    <button class="pill-v2 active cypher-pill" data-key="personas">Personas</button>
+                    <button class="pill-v2 cypher-pill" data-key="peliculas">Películas</button>
+                    <button class="pill-v2 cypher-pill" data-key="fraude">Fraude</button>
+                </div>
+            </div>
+            
+            <div class="ide-main-v2">
+                <div class="ide-col-left" style="width: 40%; display: flex; flex-direction: column; padding: 20px 0; justify-content: space-between; height: 100%;">
+                    <div style="display: flex; flex: 1; min-height: 0;">
+                        <div class="ide-line-nums" id="cypher-line-nums"></div>
+                        <div class="ide-query-view" id="cypher-query-view"></div>
+                    </div>
+                    <div style="height: 1px; background: #2A2A3E; margin: 15px 0 0 0; width: 100%;"></div>
+                    <div style="padding: 15px 20px 0 20px; width: 100%;">
+                        <div id="cypher-info-box" style="background: #13131F; border-left: 3px solid #F59E0B; padding: 12px 16px; color: #A9B1D6; font-size: 12px; font-family: monospace;"></div>
+                    </div>
+                </div>
+                
+                <div class="ide-col-right" style="width: 60%; background: #1a1b2e; position: relative; display: flex; flex-direction: column;">
+                    <div id="cypher-placeholder" class="sql-placeholder" style="background: #1a1b2e; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2A2A4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="7" r="2" fill="#2A2A4A"/>
+                            <circle cx="8" cy="14" r="2" fill="#2A2A4A"/>
+                            <circle cx="16" cy="14" r="2" fill="#2A2A4A"/>
+                            <line x1="12" y1="9" x2="9.5" y2="12.5"/>
+                            <line x1="12" y1="9" x2="14.5" y2="12.5"/>
+                            <line x1="10" y1="14" x2="14" y2="14"/>
+                        </svg>
+                        <div style="font-family: monospace; font-size: 13px; color: #3D3D5C; font-style: italic;">Presiona Run o F5 para ejecutar</div>
+                    </div>
+                    <div id="cypher-overlay" class="sql-overlay" style="background: rgba(26, 27, 46, 0.7); z-index: 10;">
+                        <div class="sql-spinner-wrap">
+                            <div class="sql-spinner"></div>
+                            <span class="sql-spinner-text">Ejecutando consulta...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="neo-toolbar" style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; z-index: 4;">
+                        <button id="cypher-btn-fit" class="neo-tool-btn" title="Ajustar vista">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                            </svg>
+                        </button>
+                        <button id="cypher-btn-zoomin" class="neo-tool-btn" title="Acercar">+</button>
+                        <button id="cypher-btn-zoomout" class="neo-tool-btn" title="Alejar">−</button>
+                    </div>
+                    
+                    <div id="neo-tooltip" style="position: absolute; background: #13131F; border: 1px solid #2a2a3e; color: #E2E8F0; padding: 6px 12px; border-radius: 6px; font-family: monospace; font-size: 11px; pointer-events: none; opacity: 0; transition: opacity 0.1s ease; z-index: 100;"></div>
+                    
+                    <div id="vis-lab-new" style="flex: 1; width: 100%; height: calc(100% - 32px); background: transparent;"></div>
+                    
+                    <div class="ide-status-v2" id="cypher-status-bar" style="height: 32px; background: #13131F; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #2a2a3e;">
+                        <div id="cypher-status-left" style="font-family: monospace; font-size: 11px; color: #4A4A6A;"></div>
+                        <div style="font-family: monospace; font-size: 11px; color: #3D3D5C;">Neo4J Browser</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lab-sql-container" class="sql-ide-v2 fade-up">
+            <div class="ide-top-v2">
+                <div class="ide-dots-v2">
+                    <div class="dot-v2 dot-red"></div>
+                    <div class="dot-v2 dot-yellow"></div>
+                    <div class="dot-v2 dot-green"></div>
+                </div>
+                <div class="ide-tab-v2">query.sql</div>
+                <button id="sql-run-btn" class="sql-run-btn">
+                    <span class="run-icon">▶</span><span class="run-text">Run</span>
+                </button>
+                <div class="ide-pills-v2">
+                    <button class="pill-v2 active sql-pill" data-key="personas">Personas</button>
+                    <button class="pill-v2 sql-pill" data-key="peliculas">Películas</button>
+                    <button class="pill-v2 sql-pill" data-key="fraude">Fraude</button>
+                </div>
+            </div>
+
+            <div class="ide-main-v2">
+                <div class="ide-col-left">
+                    <div class="ide-line-nums" id="sql-line-nums"></div>
+                    <div class="ide-query-view" id="sql-query-view"></div>
+                </div>
+                
+                <div class="ide-col-right">
+                    <div id="sql-placeholder" class="sql-placeholder">Presiona Run o F5 para ejecutar</div>
+                    <div id="sql-overlay" class="sql-overlay">
+                        <div class="sql-spinner-wrap">
+                            <div class="sql-spinner"></div>
+                            <span class="sql-spinner-text">Ejecutando consulta...</span>
+                        </div>
+                    </div>
+                    <div class="res-table-wrap" style="flex: 1; overflow-y: auto;">
+                        <table class="ide-table-v2">
+                            <thead id="sql-table-head"></thead>
+                            <tbody id="sql-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="ide-status-v2" id="sql-status-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lab-comparar-container" class="comparar-ide-v2 fade-up" style="display: none; flex-direction: column; background: #13131F; border-radius: 16px; height: 750px; overflow: hidden; box-sizing: border-box;">
+            <div class="ide-top-v2" style="background: #13131F; border-bottom: 1px solid #2a2a3e; padding-right: 20px; height: 42px; box-sizing: border-box;">
+                <div class="ide-dots-v2" style="padding-left: 20px;">
+                    <div class="dot-v2 dot-red"></div>
+                    <div class="dot-v2 dot-yellow"></div>
+                    <div class="dot-v2 dot-green"></div>
+                </div>
+                <div class="ide-tab-v2" style="font-family: monospace;">comparar.sql</div>
+            </div>
+
+            <div style="display: flex; height: 676px; position: relative; box-sizing: border-box; overflow: hidden;">
+                <div id="comp-left-col" style="width: 50%; display: flex; flex-direction: column; height: 676px; border-right: 1px solid #2a2a3e; box-sizing: border-box; overflow: hidden;">
+                    <div style="height: 280px; display: flex; flex-direction: column; background: #1E1E2E; border-bottom: 1px solid #2a2a3e; box-sizing: border-box; overflow: hidden;">
+                        <div style="background: #1E1E2E; padding: 10px 16px; font-family: monospace; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #6366F1; letter-spacing: 0.12em; border-bottom: 1px solid #2a2a3e; height: 38px; box-sizing: border-box; overflow: hidden;">
+                            SQL — Relacional
+                        </div>
+                        <div style="display: flex; padding: 15px 0; overflow-y: auto; overflow-x: hidden; height: 241px; box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #2A2A3E #13131F;">
+                            <div class="ide-line-nums" style="width: 45px; text-align: right; padding-right: 15px; color: #3D3D5C; font-family: monospace; font-size: 13px; line-height: 1.5; user-select: none;">
+                                1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18
+                            </div>
+                            <div class="ide-query-view" style="flex: 1; color: #A9B1D6; font-family: monospace; font-size: 13px; line-height: 1.5; white-space: pre;"><span style="color: #4A5568; font-style: italic;">-- Artistas y sus canciones con género</span>
+<span class="sq-kw">SELECT</span>   <span class="sq-col">a.nombre</span>        <span class="sq-kw">AS</span> <span class="sq-col">artista</span><span class="sq-punc">,</span>
+         <span class="sq-col">c.titulo</span>        <span class="sq-kw">AS</span> <span class="sq-col">cancion</span><span class="sq-punc">,</span>
+         <span class="sq-col">g.nombre</span>        <span class="sq-kw">AS</span> <span class="sq-col">genero</span>
+
+<span style="color: #4A5568; font-style: italic;">-- Tabla base: artistas</span>
+<span class="sq-kw">FROM</span>     <span class="sq-tbl">artistas</span> a
+
+<span style="color: #4A5568; font-style: italic;">-- Unir con canciones via tabla intermedia</span>
+<span class="sq-kw">JOIN</span>     <span class="sq-tbl">artista_cancion</span> ac
+  <span class="sq-kw">ON</span>     <span class="sq-col">a.id</span> <span class="sq-punc">=</span> <span class="sq-col">ac.artista_id</span>
+
+<span style="color: #4A5568; font-style: italic;">-- Obtener datos de la canción</span>
+<span class="sq-kw">JOIN</span>     <span class="sq-tbl">canciones</span> c
+  <span class="sq-kw">ON</span>     <span class="sq-col">ac.cancion_id</span> <span class="sq-punc">=</span> <span class="sq-col">c.id</span>
+
+<span style="color: #4A5568; font-style: italic;">-- Unir con géneros via tabla intermedia</span>
+<span class="sq-kw">JOIN</span>     <span class="sq-tbl">cancion_genero</span> cg
+  <span class="sq-kw">ON</span>     <span class="sq-col">c.id</span> <span class="sq-punc">=</span> <span class="sq-col">cg.cancion_id</span>
+
+<span class="sq-kw">JOIN</span>     <span class="sq-tbl">generos</span> g
+  <span class="sq-kw">ON</span>     <span class="sq-col">cg.genero_id</span> <span class="sq-punc">=</span> <span class="sq-col">g.id</span></div>
+                        </div>
+                    </div>
+                    <div style="padding: 0 16px; background: #13131F; display: flex; align-items: center; border-bottom: 1px solid #2a2a3e; height: 36px; box-sizing: border-box; overflow: hidden;">
+                        <span style="background: #2A2A3E; border-radius: 20px; padding: 4px 12px; font-family: monospace; font-size: 11px; color: #E2E8F0;">18 líneas · 4 JOINs · 5 tablas</span>
+                    </div>
+                    <div style="height: 360px; overflow-y: auto; overflow-x: hidden; background: #13131F; padding: 10px; box-sizing: border-box;">
+                        <table class="ide-table-v2" style="width: 100%; border-collapse: collapse; text-align: left; font-family: monospace; font-size: 12px;">
+                            <thead style="border-bottom: 1.5px solid #2a2a3e; color: #565f89;">
+                                <tr>
+                                    <th style="padding: 6px 12px;">ARTISTA</th>
+                                    <th style="padding: 6px 12px;">CANCIÓN</th>
+                                    <th style="padding: 6px 12px;">GÉNERO</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: #a9b1d6;">
+                                <tr><td style="padding: 6px 12px;">Taylor Swift</td><td style="padding: 6px 12px;">Anti-Hero</td><td style="padding: 6px 12px;">Pop</td></tr>
+                                <tr><td style="padding: 6px 12px;">Bad Bunny</td><td style="padding: 6px 12px;">Creepin</td><td style="padding: 6px 12px;">Latin Trap</td></tr>
+                                <tr><td style="padding: 6px 12px;">Bad Bunny</td><td style="padding: 6px 12px;">Creepin</td><td style="padding: 6px 12px;">R&B</td></tr>
+                                <tr><td style="padding: 6px 12px;">The Weeknd</td><td style="padding: 6px 12px;">Creepin</td><td style="padding: 6px 12px;">Latin Trap</td></tr>
+                                <tr><td style="padding: 6px 12px;">The Weeknd</td><td style="padding: 6px 12px;">Creepin</td><td style="padding: 6px 12px;">R&B</td></tr>
+                                <tr><td style="padding: 6px 12px;">Bad Bunny</td><td style="padding: 6px 12px;">Moscow Mule</td><td style="padding: 6px 12px;">Latin Trap</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="comp-right-col" style="width: 50%; display: flex; flex-direction: column; height: 676px; box-sizing: border-box; overflow: hidden;">
+                    <div style="height: 280px; display: flex; flex-direction: column; background: #1E1E2E; border-bottom: 1px solid #2a2a3e; box-sizing: border-box; overflow: hidden;">
+                        <div style="background: #1a1b2e; padding: 10px 16px; font-family: monospace; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #06B6D4; letter-spacing: 0.12em; border-bottom: 1px solid #2a2a3e; height: 38px; box-sizing: border-box; overflow: hidden;">
+                            CYPHER — Grafo
+                        </div>
+                        <div style="display: flex; padding: 15px 0; overflow-y: auto; overflow-x: hidden; height: 241px; box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #2A2A3E #13131F;">
+                            <div class="ide-line-nums" style="width: 45px; text-align: right; padding-right: 15px; color: #3D3D5C; font-family: monospace; font-size: 13px; line-height: 1.5; user-select: none;">
+                                1<br>2<br>3<br>4<br>5<br>6<br>7
+                            </div>
+                            <div class="ide-query-view" style="flex: 1; color: #A9B1D6; font-family: monospace; font-size: 13px; line-height: 1.5; white-space: pre;"><span style="color: #4A5568; font-style: italic;">// Artistas, canciones y géneros</span>
+<span class="cy-kw">MATCH</span>  <span class="cy-punc">(</span><span class="cy-var">a</span><span class="cy-lbl">:Artista</span><span class="cy-punc">)</span>
+         <span class="cy-punc">-</span><span class="cy-punc">[</span><span class="cy-rel">:INTERPRETA</span><span class="cy-punc">]</span><span class="cy-punc">-&gt;</span>
+       <span class="cy-punc">(</span><span class="cy-var">c</span><span class="cy-lbl">:Cancion</span><span class="cy-punc">)</span>
+         <span class="cy-punc">-</span><span class="cy-punc">[</span><span class="cy-rel">:ES_GENERO</span><span class="cy-punc">]</span><span class="cy-punc">-&gt;</span>
+       <span class="cy-punc">(</span><span class="cy-var">g</span><span class="cy-lbl">:Genero</span><span class="cy-punc">)</span>
+
+<span style="color: #4A5568; font-style: italic;">// Devolver todo el patrón</span>
+<span class="cy-kw">RETURN</span> <span class="cy-var">a</span><span class="cy-punc">,</span> <span class="cy-var">c</span><span class="cy-punc">,</span> <span class="cy-var">g</span></div>
+                        </div>
+                    </div>
+                    <div style="padding: 0 16px; background: #1a1b2e; display: flex; align-items: center; border-bottom: 1px solid #2a2a3e; height: 36px; box-sizing: border-box; overflow: hidden;">
+                        <span style="background: #2A2A3E; border-radius: 20px; padding: 4px 12px; font-family: monospace; font-size: 11px; color: #E2E8F0;">7 líneas · 0 JOINs · 1 patrón</span>
+                    </div>
+                    <div id="comp-vis-lab-new" style="height: 360px; background: #1a1b2e; position: relative; overflow: hidden; box-sizing: border-box;"></div>
+                </div>
+            </div>
+
+            <div style="height: 32px; background: #0F172A; display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 12px; color: #A9B1D6; border-top: 1px solid #2a2a3e; padding: 0 24px; text-align: center; box-sizing: border-box;">
+                Mismo resultado · SQL necesita 4 JOINs y 5 tablas · Cypher recorre el grafo como una oración
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-gradient-line"></div>
+        <div class="footer-image-wrap">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="">
+            <div class="footer-image-fade-left"></div>
+            <div class="footer-image-fade-right"></div>
+        </div>
+        <div class="container footer-container">
+            <div class="footer-left">
+                <div class="footer-col footer-col-credits">
+                    <span class="footer-label">CRÉDITOS</span>
+                    <span class="footer-name">Martín Gaona</span>
+                    <span class="footer-name">Erick Quinchiguango</span>
+                    <span class="footer-name">Nicole Yépez</span>
+                </div>
+                <div class="footer-col footer-col-nav">
+                    <span class="footer-label">NAVEGACIÓN</span>
+                    <a href="definicion.html" class="page-link">Definición</a>
+                    <a href="motores.html" class="page-link">Motores</a>
+                    <a href="casos-uso.html" class="page-link">Casos de Uso</a>
+                    <a href="equivalencias.html" class="page-link">Equivalencias</a>
+                    <a href="laboratorio.html" class="page-link">Laboratorio</a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2026 BASES DE DATOS NOSQL — Base de Datos II
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/cypher-lab.js"></script>
+</body>
+</html>

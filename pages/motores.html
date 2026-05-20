@@ -5,76 +5,465 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motores | Grafos & Neo4J</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            background-color: #F7F0F0 !important;
+            color: #1A0A0A !important;
+        }
+        .site-header {
+            background: #FDF5F5 !important;
+            border-bottom: 1px solid #E8C5C5 !important;
+            box-shadow: 0 2px 10px rgba(139, 26, 26, 0.04) !important;
+        }
+        .logo-text, .nav-links a {
+            color: #1A0A0A !important;
+        }
+        .logo-accent {
+            color: #8B1A1A !important;
+        }
+        .nav-links a:hover {
+            color: #8B1A1A !important;
+        }
+        
+        .back-home-btn {
+            background: #0F172A !important;
+            border: none !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 16px rgba(15,23,42,0.25) !important;
+            transition: all 0.2s ease !important;
+        }
+        .back-home-btn:hover {
+            background: #1E293B !important;
+            border: 1px solid #8B1A1A !important;
+            box-shadow: 0 6px 24px rgba(15,23,42,0.35) !important;
+            transform: translateY(-2px) !important;
+        }
+        .back-home-btn svg {
+            stroke: #06B6D4 !important;
+        }
+        .back-home-btn span {
+            color: #F8FAFC !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem) !important;
+            font-weight: 700 !important;
+            color: #1A0A0A !important;
+            margin-bottom: 0 !important;
+            text-align: center;
+        }
+        .title-underline-wrapper {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+        .title-underline {
+            height: 3px;
+            background: linear-gradient(90deg, #8B1A1A, #B87333);
+            width: 0;
+            margin: 12px auto 0;
+            border-radius: 2px;
+            animation: expandUnderline 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes expandUnderline {
+            to { width: 50%; }
+        }
+
+        .section-label-red {
+            color: #8B1A1A !important;
+            border-left: 3px solid #B87333 !important;
+            padding-left: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .engines-grid-red {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 24px !important;
+            align-items: stretch !important;
+            margin-top: 3rem;
+        }
+        @media (max-width: 992px) {
+            .engines-grid-red {
+                grid-template-columns: 1fr !important;
+            }
+            .featured-card-wrapper {
+                transform: none !important;
+                order: -1;
+                margin-bottom: 12px;
+                margin-top: 12px;
+            }
+        }
+
+        .card-arango {
+            background: #FDF5F5 !important;
+            border: 1px solid #E8C5C5 !important;
+            border-radius: 20px !important;
+            position: relative;
+            padding: 0 !important;
+            overflow: hidden !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+        .card-arango:hover {
+            border-color: #C0392B !important;
+            box-shadow: 0 6px 24px rgba(192, 57, 43, 0.12) !important;
+            transform: translateY(-4px) !important;
+        }
+        .title-arango {
+            color: #C0392B !important;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+
+        .card-neptune {
+            background: #FDF5F5 !important;
+            border: 1px solid #E8C5C5 !important;
+            border-radius: 20px !important;
+            position: relative;
+            padding: 0 !important;
+            overflow: hidden !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+        .card-neptune:hover {
+            border-color: #B87333 !important;
+            box-shadow: 0 6px 24px rgba(184, 115, 51, 0.12) !important;
+            transform: translateY(-4px) !important;
+        }
+        .title-neptune {
+            color: #B87333 !important;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+
+        .featured-card-wrapper {
+            transform: scale(1.03);
+            z-index: 10;
+        }
+        .card-neo4j {
+            background: #FDF5F5 !important;
+            border: 2px solid #8B1A1A !important;
+            border-radius: 20px !important;
+            position: relative;
+            padding: 0 !important;
+            overflow: hidden !important;
+            box-shadow: 0 8px 32px rgba(139, 26, 26, 0.15) !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .badge-leader {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #8B1A1A;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 0 18px 0 8px;
+        }
+        .title-neo4j {
+            color: #8B1A1A !important;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+        }
+
+        .card-accent-bar {
+            width: 100% !important;
+            height: 4px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+            border-radius: 16px 16px 0 0 !important;
+            box-sizing: border-box !important;
+        }
+        .card-inner-content {
+            padding: 28px 24px 24px 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: calc(100% - 4px) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        .engine-desc {
+            font-size: 14px !important;
+            color: #7A4A4A !important;
+            line-height: 1.6 !important;
+            margin-bottom: 20px;
+        }
+        .engine-tags-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .tag-neo4j {
+            background: rgba(139, 26, 26, 0.08) !important;
+            border: 1px solid #E8C5C5 !important;
+            color: #8B1A1A !important;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .tag-arango {
+            background: rgba(192, 57, 43, 0.08) !important;
+            border: 1px solid #E8C5C5 !important;
+            color: #C0392B !important;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .tag-neptune {
+            background: rgba(184, 115, 51, 0.08) !important;
+            border: 1px solid #E8C5C5 !important;
+            color: #B87333 !important;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .adoption-label {
+            font-size: 13px !important;
+            color: #7A4A4A !important;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .adoption-bar-container {
+            background: #E8C5C5 !important;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .adoption-fill-neo4j {
+            height: 100%;
+            background: linear-gradient(90deg, #8B1A1A, #C0392B) !important;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .adoption-fill-arango {
+            height: 100%;
+            background: #C0392B !important;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .adoption-fill-neptune {
+            height: 100%;
+            background: #B87333 !important;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .comparison-strip-red {
+            background: #1A0A0A !important;
+            border-radius: 20px !important;
+            padding: 40px !important;
+            margin-top: 48px !important;
+            box-shadow: 0 10px 30px rgba(26, 10, 10, 0.15);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .comparison-grid-red {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .comparison-grid-red {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        .comparison-col-red {
+            text-align: center;
+        }
+        .header-diff-neo4j {
+            color: #E8C5C5 !important;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-diff-arango {
+            color: #C0392B !important;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-diff-neptune {
+            color: #B87333 !important;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .desc-diff-red {
+            color: #D4A0A0 !important;
+            font-size: 13px !important;
+            line-height: 1.5;
+        }
+
+        .site-footer {
+            background: #18181B !important;
+            color: #F5F5F0 !important;
+            border-top: none !important;
+            margin-top: 5rem;
+        }
+        .footer-gradient-line {
+            background: linear-gradient(90deg, #8B1A1A, #B87333) !important;
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
         <div class="container header-container">
-            <a href="../index.html" class="logo">Grafos & Neo4J</a>
+            <a href="../index.html" class="logo">
+                <div class="logo-icon-wrapper">
+                    <img src="../logo.png" alt="Logo" class="logo-img">
+                </div>
+                <span class="logo-text">SQL <span class="logo-accent">×</span> Neo4J</span>
+            </a>
             <button class="menu-toggle">☰</button>
             <nav class="nav-links">
                 <a href="definicion.html">Definición</a>
                 <a href="motores.html">Motores</a>
                 <a href="casos-uso.html">Casos de Uso</a>
                 <a href="equivalencias.html">Equivalencias</a>
+                <a href="laboratorio.html">Laboratorio</a>
             </nav>
         </div>
     </header>
 
+    <a href="../index.html" class="back-home-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Inicio</span>
+    </a>
+
     <div class="container">
-        <header class="page-header fade-up">
-            <a href="../index.html" class="back-link">← Volver al inicio</a>
-            <h1>Motores de Grafos</h1>
+        <header class="page-header fade-up" style="margin-top: 3rem; margin-bottom: 3rem;">
+            <div class="title-underline-wrapper">
+                <h1>Motores de Grafos</h1>
+                <div class="title-underline"></div>
+            </div>
         </header>
 
         <section class="content-section fade-up">
-            <h2 class="section-title">Principales Alternativas del Mercado</h2>
-            <p style="margin-top: 1rem;">Aunque existen diversas opciones en el mercado, el ecosistema de grafos cuenta con líderes claros y alternativas que combinan diferentes paradigmas.</p>
+            <h2 class="section-label-red">Principales Alternativas del Mercado</h2>
             
-            <div class="engines-grid" style="margin-top: 3rem;">
+            <div class="engines-grid-red">
                 
-                <div class="engine-card">
-                    <h3>Amazon Neptune</h3>
-                    <p>Servicio gestionado por AWS optimizado para grafos de propiedades y RDF.</p>
-                    <div class="badges">
-                        <span class="badge">Cloud Nativo</span>
-                        <span class="badge">Gremlin</span>
-                        <span class="badge">SPARQL</span>
-                    </div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem; color: var(--secondary);">Adopción en el mercado</p>
-                    <div class="popularity-bar">
-                        <div class="popularity-fill" data-width="45%"></div>
-                    </div>
-                </div>
-
-                <div class="engine-card featured">
-                    <h3>Neo4J</h3>
-                    <p>El líder indiscutible del mercado, diseñado nativamente para almacenar y procesar grafos con un rendimiento incomparable.</p>
-                    <div class="badges">
-                        <span class="badge">Nativo</span>
-                        <span class="badge">Cypher</span>
-                        <span class="badge">Líder del sector</span>
-                        <span class="badge">ACID</span>
-                    </div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem; color: var(--primary);">Adopción en el mercado</p>
-                    <div class="popularity-bar">
-                        <div class="popularity-fill" data-width="95%"></div>
+                <div class="card-arango">
+                    <div class="card-accent-bar" style="background: #C0392B;"></div>
+                    <div class="card-inner-content">
+                        <div>
+                            <h3 class="title-arango">ArangoDB</h3>
+                            <p class="engine-desc">Base de datos multimodelo que soporta documentos, clave-valor y grafos en el mismo núcleo.</p>
+                            <div class="engine-tags-flex">
+                                <span class="tag-arango">Multimodelo</span>
+                                <span class="tag-arango">AQL</span>
+                                <span class="tag-arango">Flexible</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="adoption-label">Adopción en el mercado</div>
+                            <div class="adoption-bar-container">
+                                <div class="adoption-fill-arango" data-width="45%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="engine-card">
-                    <h3>ArangoDB</h3>
-                    <p>Base de datos multimodelo que soporta documentos, clave-valor y grafos en el mismo núcleo.</p>
-                    <div class="badges">
-                        <span class="badge">Multimodelo</span>
-                        <span class="badge">AQL</span>
-                        <span class="badge">Flexible</span>
-                    </div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem; color: var(--secondary);">Adopción en el mercado</p>
-                    <div class="popularity-bar">
-                        <div class="popularity-fill" data-width="60%"></div>
+                <div class="featured-card-wrapper">
+                    <div class="card-neo4j">
+                        <div class="card-accent-bar" style="background: linear-gradient(135deg, #8B1A1A, #C0392B);"></div>
+                        <div class="badge-leader">Líder</div>
+                        <div class="card-inner-content">
+                            <div>
+                                <h3 class="title-neo4j">Neo4j</h3>
+                                <p class="engine-desc">El líder indiscutible del mercado, diseñado nativamente para almacenar y procesar grafos con un rendimiento incomparable.</p>
+                                <div class="engine-tags-flex">
+                                    <span class="tag-neo4j">Nativo</span>
+                                    <span class="tag-neo4j">Cypher</span>
+                                    <span class="tag-neo4j">ACID</span>
+                                    <span class="tag-neo4j">Líder del sector</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="adoption-label">Adopción en el mercado</div>
+                                <div class="adoption-bar-container">
+                                    <div class="adoption-fill-neo4j" data-width="92%"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <div class="card-neptune">
+                    <div class="card-accent-bar" style="background: #B87333;"></div>
+                    <div class="card-inner-content">
+                        <div>
+                            <h3 class="title-neptune">Amazon Neptune</h3>
+                            <p class="engine-desc">Servicio gestionado por AWS optimizado para grafos de propiedades y RDF con alta escalabilidad.</p>
+                            <div class="engine-tags-flex">
+                                <span class="tag-neptune">Cloud Nativo</span>
+                                <span class="tag-neptune">Gremlin</span>
+                                <span class="tag-neptune">SPARQL</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="adoption-label">Adopción en el mercado</div>
+                            <div class="adoption-bar-container">
+                                <div class="adoption-fill-neptune" data-width="35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="comparison-strip-red">
+                <div class="comparison-grid-red">
+                    <div class="comparison-col-red">
+                        <h4 class="header-diff-neo4j">Neo4j: Cypher nativo</h4>
+                        <p class="desc-diff-red">El lenguaje más expresivo para grafos</p>
+                    </div>
+                    <div class="comparison-col-red">
+                        <h4 class="header-diff-arango">ArangoDB: Multimodelo</h4>
+                        <p class="desc-diff-red">Grafos, documentos y clave-valor en uno</p>
+                    </div>
+                    <div class="comparison-col-red">
+                        <h4 class="header-diff-neptune">Neptune: Cloud nativo</h4>
+                        <p class="desc-diff-red">Integración total con AWS</p>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -100,6 +489,7 @@
                     <a href="motores.html" class="page-link">Motores</a>
                     <a href="casos-uso.html" class="page-link">Casos de Uso</a>
                     <a href="equivalencias.html" class="page-link">Equivalencias</a>
+                    <a href="laboratorio.html" class="page-link">Laboratorio</a>
                 </div>
             </div>
             <div class="footer-copyright">
@@ -109,5 +499,37 @@
     </footer>
 
     <script src="../js/animations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            var observer = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('comparison-strip-red')) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                        
+                        var fills = entry.target.querySelectorAll('[class^="adoption-fill-"]');
+                        fills.forEach(function(fill) {
+                            var targetWidth = fill.getAttribute('data-width');
+                            fill.style.width = targetWidth;
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            var strip = document.querySelector('.comparison-strip-red');
+            if (strip) observer.observe(strip);
+
+            var grid = document.querySelector('.engines-grid-red');
+            if (grid) observer.observe(grid);
+        });
+    </script>
 </body>
 </html>
